@@ -1,0 +1,201 @@
+﻿<Window x:Class="QuizGenerator.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:QuizGenerator"
+        xmlns:vm="clr-namespace:QuizGenerator.ViewModel"
+        mc:Ignorable="d"
+        ResizeMode="NoResize"
+        Title="Generator Quizów - Wojciech Barciński" Height="700" Width="1200">
+    <Window.DataContext>
+        <vm:MainViewModel/>
+    </Window.DataContext>
+
+    <Window.Resources>
+        <Style TargetType="{x:Type Button}">
+            <Setter Property="Height" Value="50"/>
+        </Style>
+
+        <Style TargetType="{x:Type TextBox}">
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="79*"/>
+            <ColumnDefinition Width="142*"/>
+            <ColumnDefinition Width="79*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid 
+            x:Name="BasicOptions"
+            Grid.Column="0">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <StackPanel Margin="10,10,10,0"
+                x:Name="FileIO"
+                DataContext="{Binding FileManager}"
+                Grid.Row="0">
+                <Button
+                    Content="NOWY"
+                    Command="{Binding NewFile}"/>
+                <Button
+                    Content="OTWÓRZ"
+                    Command="{Binding OpenFile}"/>
+                <Button
+                    Content="ZAPISZ"
+                    Command="{Binding SaveFile}"/>
+            </StackPanel>
+
+            <StackPanel  Margin="10,10,10,10"
+                x:Name="GeneralInformation"
+                DataContext="{Binding QuizEditor}"
+                Grid.Row="1">
+                <Label Content="Nazwa quizu:"/>
+                <TextBox
+                    Margin="0, 0, 0, 10"
+                    Height="80"
+                    Text="{Binding Quiz.Name}"
+                    MaxLength="120"/>
+                <Label Content="Opis quizu:"/>
+                <TextBox
+                    Height="160"
+                    Text="{Binding Quiz.Description}"
+                    MaxLength="240"/>
+            </StackPanel>
+
+            <StackPanel Margin="10,10,10,10"
+                x:Name="ExtraGameOptions"
+                Grid.Row="2">
+            </StackPanel>
+        </Grid>
+
+        <Grid
+            x:Name="CurrentQuestion"
+            Grid.Column="1"
+            DataContext="{Binding QuizEditor}">
+            <StackPanel>
+                <Label Content="Treść pytania:"/>
+                <TextBox Margin="10,0,102,0"
+                    Text="{Binding CurrentQuestion.Content, Mode=TwoWay}"
+                    Height="160"
+                    MaxLength="300"/>
+                <Label Content="Odpowiedzi:"/>
+                <Grid Margin="10,0,10,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBox
+                        Grid.Column="0"
+                        Text="{Binding CurrentQuestion.Answers[0].Content, Mode=TwoWay}"/>
+                    <CheckBox
+                        Grid.Column="1"
+                        Margin="10, 35, 5, 35"
+                        Content="Poprawna?"
+                        IsChecked="{Binding CurrentQuestion.Answers[0].IsCorrect, Mode=TwoWay}"/>
+                </Grid>
+                <Grid Margin="10,10,10,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBox
+                        Grid.Column="0"
+                        Text="{Binding CurrentQuestion.Answers[1].Content, Mode=TwoWay}"/>
+                    <CheckBox
+                        Grid.Column="1"
+                        Margin="10, 35, 5, 35"
+                        Content="Poprawna?"
+                        IsChecked="{Binding CurrentQuestion.Answers[1].IsCorrect, Mode=TwoWay}"/>
+                </Grid>
+                <Grid Margin="10,10,10,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBox
+                        Grid.Column="0"
+                        Text="{Binding CurrentQuestion.Answers[2].Content, Mode=TwoWay}"/>
+                    <CheckBox
+                        Grid.Column="1"
+                        Margin="10, 35, 5, 35"
+                        Content="Poprawna?"
+                        IsChecked="{Binding CurrentQuestion.Answers[2].IsCorrect, Mode=TwoWay}"/>
+                </Grid>
+                <Grid Margin="10,10,10,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBox
+                        Grid.Column="0"
+                        Text="{Binding CurrentQuestion.Answers[3].Content, Mode=TwoWay}"/>
+                    <CheckBox
+                        Grid.Column="1"
+                        Margin="10, 35, 5, 35"
+                        Content="Poprawna?"
+                        IsChecked="{Binding CurrentQuestion.Answers[3].IsCorrect, Mode=TwoWay}"/>
+                </Grid>
+
+                <TextBlock 
+                    Margin="10, 10, 105, 10"
+                    FontStyle="Italic"
+                    Foreground="Red"
+                    TextWrapping="Wrap"
+                    Visibility="{Binding WarningVisibility}"
+                    Text="Pytanie musi mieć treść, odpowiedzi muszą mieć treść, a przynajmniej jedna z nich musi być poprawna!"/>
+            </StackPanel>
+        </Grid>
+
+        <Grid 
+            x:Name="QuizEditor" 
+            Grid.Column="2" 
+            DataContext="{Binding QuizEditor}">
+
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <ListBox
+                Grid.Row="0"
+                ItemsSource="{Binding Quiz.Questions, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"              
+                SelectedItem="{Binding CurrentQuestion, Mode=TwoWay}"
+                IsEnabled="{Binding CurrentQuestion.IsValid}"
+                IsSynchronizedWithCurrentItem="true">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock 
+                            Width="295"
+                            Text="{Binding Content}"
+                            TextWrapping="Wrap"/>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+
+            <StackPanel
+                Grid.Row="1">
+                <Button 
+                    Content="DODAJ"
+                    Command="{Binding AddQuestion}"/>
+                <Button
+                    Content="USUŃ"
+                    Command="{Binding RemoveQuestion}"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>
